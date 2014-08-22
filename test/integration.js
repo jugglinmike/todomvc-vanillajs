@@ -9,13 +9,14 @@ var chromeDriver = require('chromedriver');
 var makeSelector = webdriver.By.css;
 var keys = webdriver.Key;
 var port = process.env.NODE_TEST_PORT || 8002;
+var locators = require('./locators.json');
 
 function createItem() {
   // this will run before the tests in this `describe` block
   var driver = this.driver;
   var initialItemCount;
 
-  return driver.findElements(makeSelector('#todo-list li'))
+  return driver.findElements(makeSelector(locators.listItem))
     .then(function(todoItems) {
       initialItemCount = todoItems.length;
     }).then(function() {
@@ -35,7 +36,7 @@ function createItem() {
       // 3. c) Return `true` ONLY IF the current length is greater than the
       //       initial length.
       function newElementAdded() {
-        return driver.findElements(makeSelector('#todo-list li'))
+        return driver.findElements(makeSelector(locators.listItem))
           .then(function(elements) {
             return elements.length > initialItemCount;
           });
@@ -81,7 +82,7 @@ describe('item creation', function() {
   it('adds new items to the list', function() {
     var driver = this.driver;
 
-    return driver.findElements(makeSelector('#todo-list li'))
+    return driver.findElements(makeSelector(locators.listItem))
       .then(function(items) {
         assert.equal(items.length, 1);
 
@@ -94,7 +95,7 @@ describe('item creation', function() {
   it('updates "items left" count when new item is added', function() {
     var driver = this.driver;
 
-    return driver.findElement(makeSelector('#todo-count'))
+    return driver.findElement(makeSelector(locators.count))
       .then(function(element) {
         return element.getText();
       }).then(function(text) {
@@ -110,7 +111,7 @@ describe('item modification', function() {
   beforeEach(function() {
     var driver = this.driver;
     return createItem.call(this).then(function() {
-      return driver.findElement(makeSelector('#todo-list li'));
+      return driver.findElement(makeSelector(locators.listItem));
     }).then(function(newItem) {
       this.newItem = newItem;
     }.bind(this));
@@ -123,7 +124,7 @@ describe('item modification', function() {
       .then(function(toggleEl) {
         return toggleEl.click();
       }).then(function() {
-        return driver.findElements(makeSelector('#todo-list .completed'))
+        return driver.findElements(makeSelector(locators.completedListItem))
       }).then(function(completedItems) {
         assert.equal(completedItems.length, 1);
       });
@@ -148,7 +149,7 @@ describe('item modification', function() {
       var driver = this.driver;
       var initialItemCount;
 
-      return driver.findElements(makeSelector('#todo-list li'))
+      return driver.findElements(makeSelector(locators.listItem))
         .then(function(elements) {
           initialItemCount = elements.length
         }).then(function() {
@@ -156,14 +157,14 @@ describe('item modification', function() {
             .mouseMove(newItem)
             .perform();
         }).then(function() {
-          return newItem.findElement(makeSelector('.destroy'));
+          return newItem.findElement(makeSelector(locators.destroyListItem));
         }).then(function(deleteBtn) {
           return deleteBtn.click();
         }).then(function() {
           // Explicitly wait until the UI has been updated in response to the
           // `click` event before continuing with the tests.
           function elementsHaveBeenRemoved() {
-            return driver.findElements(makeSelector('#todo-list li'))
+            return driver.findElements(makeSelector(locators.listItem))
               .then(function(elements) {
                 return elements.length < initialItemCount;
               });
@@ -176,7 +177,7 @@ describe('item modification', function() {
     it('removes the item from the list', function() {
       var driver = this.driver;
 
-      return driver.findElements(makeSelector('#todo-list li'))
+      return driver.findElements(makeSelector(locators.listItem))
         .then(function(items) {
           assert.equal(items.length, 0);
         });
@@ -185,7 +186,7 @@ describe('item modification', function() {
     it('decrements the "remaining item" count', function() {
       var driver = this.driver;
 
-      return driver.findElement(makeSelector('#todo-count'))
+      return driver.findElement(makeSelector(locators.count))
         .then(function(countEl) {
           return countEl.isDisplayed();
         }).then(function(isDisplayed) {

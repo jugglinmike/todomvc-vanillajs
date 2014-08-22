@@ -1,0 +1,8 @@
+{
+  "newItemInput": "#new-todo",
+  "listItem": "#todo-list li",
+  "completedListItem": "#todo-list li.completed",
+  "destroyListItem": ".destroy",
+  "toggleListItem": ".toggle",
+  "count": "#todo-count"
+}
