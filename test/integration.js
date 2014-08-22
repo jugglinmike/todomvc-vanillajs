@@ -119,14 +119,32 @@ describe('item modification', function() {
   describe('item deletion', function() {
     beforeEach(function() {
       var newItem = this.newItem;
-      return this.driver.actions()
-        .mouseMove(this.newItem)
-        .perform()
-        .then(function() {
+      var driver = this.driver;
+      var initialItemCount;
+
+      return driver.findElements(makeSelector('#todo-list li'))
+        .then(function(elements) {
+          initialItemCount = elements.length
+        }).then(function() {
+          return driver.actions()
+            .mouseMove(newItem)
+            .perform();
+        }).then(function() {
           return newItem.findElement(makeSelector('.destroy'));
         }).then(function(deleteBtn) {
           return deleteBtn.click();
-        })
+        }).then(function() {
+          // Explicitly wait until the UI has been updated in response to the
+          // `click` event before continuing with the tests.
+          function elementsHaveBeenRemoved() {
+            return driver.findElements(makeSelector('#todo-list li'))
+              .then(function(elements) {
+                return elements.length < initialItemCount;
+              });
+          }
+
+          return driver.wait(elementsHaveBeenRemoved);
+        });
     });
 
     it('removes the item from the list', function() {
