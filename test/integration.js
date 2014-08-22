@@ -13,9 +13,35 @@ var port = process.env.NODE_TEST_PORT || 8002;
 function createItem() {
   // this will run before the tests in this `describe` block
   var driver = this.driver;
-  return driver.findElement(makeSelector('#new-todo'))
-    .then(function(textInput) {
+  var initialItemCount;
+
+  return driver.findElements(makeSelector('#todo-list li'))
+    .then(function(todoItems) {
+      initialItemCount = todoItems.length;
+    }).then(function() {
+      return driver.findElement(makeSelector('#new-todo'))
+    }).then(function(textInput) {
       return textInput.sendKeys('clean Batmobile', keys.ENTER);
+    }).then(function() {
+      // We have to see if what we created was actually added to the list in
+      // the application.
+      //
+      // Pseudo code:
+      //
+      // 1. Create item (already doing above)
+      // 2. Wait for element be added:
+      // 2. a) Get array of todo item elements
+      // 2. b) Get length of array
+      // 3. c) Return `true` ONLY IF the current length is greater than the
+      //       initial length.
+      function newElementAdded() {
+        return driver.findElements(makeSelector('#todo-list li'))
+          .then(function(elements) {
+            return elements.length > initialItemCount;
+          });
+      }
+
+      return driver.wait(newElementAdded);
     });
 }
 
