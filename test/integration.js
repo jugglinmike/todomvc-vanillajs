@@ -23,9 +23,19 @@ beforeEach(function() {
 
   this.timeout(timeout);
 
-  driver.manage().timeouts().implicitlyWait(1000);
+  driver.manage().timeouts().implicitlyWait(0);
 
-  return driver.get('http://localhost:' + port);
+  return driver.get('http://localhost:' + port)
+    .then(function() {
+      return driver.executeScript(function() {
+        function sleep(duration) {
+          var start = (new Date()).getTime();
+          while ((new Date().getTime()) - start < duration) {}
+          setTimeout(sleep.bind(null, duration), 0);
+        }
+        sleep(700);
+      });
+    });
 });
 
 afterEach(function() {
@@ -70,7 +80,8 @@ describe('Creation', function(done) {
   });
 });
 
-describe('Deletion', function() {
+describe.only('Deletion', function() {
+  this.timeout(30 * 1000);
   beforeEach(function() {
     var driver = this.driver;
 
