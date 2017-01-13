@@ -19,7 +19,7 @@ beforeEach(function() {
   var timeout = 20000;
   var driver = this.driver = new webdriver.Builder()
     .withCapabilities(webdriver.Capabilities.chrome())
-    .setChromeOptions(new chrome.Options().addAguments('--no-sandbox'))
+    .setChromeOptions((new chrome.Options()).addArguments('--no-sandbox'))
     .build();
 
   this.timeout(timeout);
