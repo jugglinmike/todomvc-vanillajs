@@ -7,7 +7,6 @@ before_install:
   - "sudo dpkg -i google-chrome*.deb || true"
   - "sudo apt-get install --fix-broken"
   - "sudo dpkg -i google-chrome*.deb"
-  - "sudo chmod 1777 /dev/shm"
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - "sleep 2"
