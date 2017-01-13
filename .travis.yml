@@ -3,7 +3,6 @@ sudo: required
 before_install:
   - "lsb_release -a"
   - "sudo apt-get update -qq"
-  - "sudo apt-get install libappindicator1 fonts-liberation"
   - "wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb"
   - "sudo dpkg -i google-chrome*.deb || true"
   - "sudo apt-get install --fix-broken"
