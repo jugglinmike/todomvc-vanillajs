@@ -4,7 +4,7 @@ var assert = require('assert');
 
 var webdriver = require('selenium-webdriver');
 var chrome = require('selenium-webdriver/chrome');
-var chromeDriver = require('selenium-chromedriver');
+var chromeDriver = require('chromedriver');
 
 var port = process.env.NODE_TEST_PORT || 8002;
 
@@ -19,7 +19,7 @@ beforeEach(function() {
   var timeout = 20000;
   var driver = this.driver = new webdriver.Builder()
     .withCapabilities(webdriver.Capabilities.chrome())
-    .setChromeOptions((new chrome.Options()).addArguments('--no-sandbox'))
+    .setChromeOptions(new chrome.Options().addArguments('--no-sandbox'))
     .build();
 
   this.timeout(timeout);
