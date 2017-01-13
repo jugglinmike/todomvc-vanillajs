@@ -16,6 +16,6 @@ before_install:
   - "cat /etc/init.d/xvfb"
 language: node_js
 node_js:
-  - 0.10
+  - 6
 env:
   - DISPLAY=':99.0'
