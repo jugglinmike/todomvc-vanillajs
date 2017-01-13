@@ -1,3 +1,5 @@
+dist: trusty
+sudo: required
 before_install:
   - "lsb_release -a"
   - "sudo apt-get update -qq"
